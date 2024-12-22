@@ -31,4 +31,3 @@ keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", {desc = "Go to previous tab"}) --
 keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", {desc =  "Open the current buffer in new tab"}) -- move the current buffer to a new tab
 
 
-keymap.set("n", "<leader>e", "<cmd>Explore<CR>", {desc =  "Open the current buffer in new tab"}) -- open the explorer 
