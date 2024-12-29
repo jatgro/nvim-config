@@ -13,7 +13,7 @@ opt.expandtab = true -- expand tab to space
 opt.autoindent = true -- copy indent from the current line when starting new onme
 
 -- line wrapping 
-opt.wrap = false -- disable line wrapping 
+opt.wrap = true -- disable line wrapping 
 
 -- search settings
 opt.ignorecase = true -- ignore case when searching 
