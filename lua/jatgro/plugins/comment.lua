@@ -17,3 +17,4 @@ return {
     })
   end,
 }
+ -- keymaps are gc<motion>

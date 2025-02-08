@@ -21,3 +21,12 @@ return {
     todo_comments.setup()
   end
 }
+
+-- some of the todo comments strings are - 
+--
+-- TODO 
+-- HACK 
+-- WARN 
+-- PERF
+-- NOTE 
+-- TEST 
