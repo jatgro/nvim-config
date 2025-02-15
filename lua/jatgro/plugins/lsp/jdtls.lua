@@ -1,45 +1,65 @@
 return {
-  "mfussenegger/nvim-jdtls", -- Plugin for Java LSP (JDTLS)
-  ft = { "java" }, -- Activate only for Java files
-  dependencies = { -- Dependencies required
-    "williamboman/mason.nvim", -- Manages LSP installations
+  "mfussenegger/nvim-jdtls",
+  ft = { "java" },
+  dependencies = {
+    "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
-    "hrsh7th/cmp-nvim-lsp", -- Completion support for LSP
+    "hrsh7th/cmp-nvim-lsp",
   },
   config = function()
     local jdtls = require("jdtls")
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
     local capabilities = cmp_nvim_lsp.default_capabilities()
-    local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-    local workspace_dir = vim.fn.stdpath("data") .. "/site/java/workspace-root/" .. project_name
-    local jdtls_path = vim.fn.stdpath("data") .. "/mason/packages/jdtls"
-    local lombok_path = jdtls_path .. "/lombok.jar"
-    local jar_path = vim.fn.glob(jdtls_path .. "/plugins/org.eclipse.equinox.launcher_*.jar")
 
-    local cmd = {
-      "java",
-      "-javaagent:" .. lombok_path,
-      "-Xmx2g",
-      "-jar",
-      jar_path,
-      "-configuration",
-      jdtls_path .. "/config_linux",
-      "-data",
-      workspace_dir,
-    }
+    -- 📌 Keymap outside on_attach (Runs Java program)
+    vim.api.nvim_set_keymap(
+      "n",
+      "<leader>rj",
+      ":lua open_floating_term('javac ' .. vim.fn.expand('%') .. ' && java ' .. vim.fn.expand('%:r'))<CR>",
+      { noremap = true, silent = true }
+    )
+
+    function _G.open_floating_term(command)
+      local buf = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_open_win(buf, true, {
+        relative = "editor",
+        width = math.floor(vim.o.columns * 0.7),
+        height = math.floor(vim.o.lines * 0.7),
+        row = math.floor((vim.o.lines - vim.o.lines * 0.7) / 2),
+        col = math.floor((vim.o.columns - vim.o.columns * 0.7) / 2),
+        style = "minimal",
+        border = "rounded",
+      })
+
+      vim.fn.termopen(command, {
+        on_exit = function(_, code)
+          if code == 0 then
+            vim.notify("✅ Program completed successfully.", vim.log.levels.INFO)
+          else
+            vim.notify("❌ Program encountered errors. Press <Esc> to close.", vim.log.levels.ERROR)
+          end
+        end,
+      })
+
+      vim.cmd("startinsert") -- Start in insert mode to allow input
+      vim.api.nvim_buf_set_keymap(buf, "t", "<Esc>", "<C-\\><C-n>:q<CR>", { noremap = true, silent = true })
+    end
 
     jdtls.start_or_attach({
-      cmd = cmd,
+      cmd = {
+        "java",
+        "-javaagent:" .. vim.fn.stdpath("data") .. "/mason/packages/jdtls/lombok.jar",
+        "-Xmx2g",
+        "-jar",
+        vim.fn.glob(vim.fn.stdpath("data") .. "/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"),
+        "-configuration",
+        vim.fn.stdpath("data") .. "/mason/packages/jdtls/config_linux",
+        "-data",
+        vim.fn.stdpath("data") .. "/site/java/workspace-root/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t"),
+      },
       root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew", "build.gradle", "pom.xml" }),
       capabilities = capabilities,
-      on_attach = function(_, bufnr)
-        local opts = { buffer = bufnr, silent = true }
-        -- vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
-        -- vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-        -- vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-        vim.api.nvim_set_keymap("n", "<leader>rj", ":!javac % && java %:r<CR>", { noremap = true, silent = true })
-      end,
       settings = {
         java = {
           configuration = {
