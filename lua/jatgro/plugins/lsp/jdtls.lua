@@ -1,10 +1,10 @@
 return {
-  "mfussenegger/nvim-jdtls",         -- Plugin for Java LSP (JDTLS)
-  ft = { "java" },                   -- Activate only for Java files
-  dependencies = {                   -- Dependencies required
-    "williamboman/mason.nvim",       -- Manages LSP installations
-    "williamboman/mason-lspconfig.nvim", 
-    "hrsh7th/cmp-nvim-lsp",          -- Completion support for LSP
+  "mfussenegger/nvim-jdtls", -- Plugin for Java LSP (JDTLS)
+  ft = { "java" }, -- Activate only for Java files
+  dependencies = { -- Dependencies required
+    "williamboman/mason.nvim", -- Manages LSP installations
+    "williamboman/mason-lspconfig.nvim",
+    "hrsh7th/cmp-nvim-lsp", -- Completion support for LSP
   },
   config = function()
     local jdtls = require("jdtls")

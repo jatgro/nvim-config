@@ -15,29 +15,17 @@ return {
     }
 
     -- Configure the Checkstyle linter
+
     lint.linters.checkstyle = {
       cmd = "checkstyle",
-      args = { "-f", "xml", "-" },
-      stdin = true,
-      stream = "stdout",
+      args = { "-c", "~/.config/checkstyle/google_checks.xml" },
+      stdin = false,
+      stream = "stderr",
       ignore_exitcode = true,
-      parser = function(output, bufnr)
-        local diagnostics = {}
-        for file, line, col, message in
-          output:gmatch(
-            '<file name="[^"]-">.-<error line="(%d+)" column="(%d+)" severity="[^"]-" message="([^"]-)" source="([^"]-)"'
-          )
-        do
-          table.insert(diagnostics, {
-            lnum = tonumber(line) - 1,
-            col = tonumber(col) - 1,
-            message = message,
-            severity = vim.diagnostic.severity.WARN,
-            source = "checkstyle",
-          })
-        end
-        return diagnostics
-      end,
+      parser = require("lint.parser").from_errorformat("%f:%l:%c: %m", {
+        source = "checkstyle",
+        severity = vim.diagnostic.severity.WARN,
+      }),
     }
 
     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
@@ -49,7 +37,7 @@ return {
       end,
     })
 
-    vim.keymap.set("n", "<leader>l", function()
+    vim.keymap.set("n", "<leader>lc", function()
       lint.try_lint()
     end, { desc = "Trigger linting for current file" })
   end,
