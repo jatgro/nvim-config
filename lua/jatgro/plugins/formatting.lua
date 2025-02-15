@@ -1,6 +1,6 @@
 return {
   "stevearc/conform.nvim",
-  event = { "BufReadPre", "BufNewFile" },
+  event = { "bufreadpre", "bufnewfile" },
   config = function()
     local conform = require("conform")
 
@@ -20,11 +20,22 @@ return {
         liquid = { "prettier" },
         lua = { "stylua" },
         python = { "isort", "black" },
+        java = { "google-java-format" }, -- Add this line for Java
       },
-      format_on_save = {
-        lsp_fallback = true,
-        async = false,
-        timeout_ms = 1000,
+
+      -- Formatter configurations
+      formatters = {
+        ["google-java-format"] = {
+          command = "google-java-format",
+          args = { "--aosp", "-" }, -- Use "--aosp" for AOSP style
+          stdin = true,
+        },
+
+        format_on_save = {
+          lsp_fallback = true,
+          async = false,
+          timeout_ms = 1000,
+        },
       },
     })
 
@@ -34,6 +45,6 @@ return {
         async = false,
         timeout_ms = 1000,
       })
-    end, { desc = "Format file or range (in visual mode)" })
+    end, { desc = "format file or range (in visual mode)" })
   end,
 }
