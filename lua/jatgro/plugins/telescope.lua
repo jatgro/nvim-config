@@ -31,12 +31,12 @@ return {
           enable_previewer = true,
           enable_live_preview = true,
           ignore = { "default", "desert", "elflord", "habamax" },
-          light_themes = { ignore = true, keywords = { "light", "day", "frappe" } },
+          light_themes = { ignore = false, keywords = { "light", "day", "frappe" } },
           dark_themes = { ignore = false, keywords = { "dark", "night", "black" } },
-          persist = {
-            enabled = true,
-            path = vim.fn.stdpath("config") .. "/lua/jatgro/plugins/colorscheme.lua",
-          },
+          -- persist = {
+          --   enabled = true,
+          --   path = vim.fn.stdpath("config") .. "/lua/jatgro/plugins/colorscheme.lua",
+          -- },
         },
       },
     })
