@@ -33,10 +33,10 @@ return {
           ignore = { "default", "desert", "elflord", "habamax" },
           light_themes = { ignore = false, keywords = { "light", "day", "frappe" } },
           dark_themes = { ignore = false, keywords = { "dark", "night", "black" } },
-          -- persist = {
-          --   enabled = true,
-          --   path = vim.fn.stdpath("config") .. "/lua/jatgro/plugins/colorscheme.lua",
-          -- },
+          persist = {
+            enabled = true,
+            --[[           path = vim.fn.stdpath("config") .. "/lua/jatgro/current-theme.lua" ]]
+          },
         },
       },
     })
