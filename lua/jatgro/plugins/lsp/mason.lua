@@ -22,35 +22,47 @@ return {
           package_uninstalled = "✗",
         },
       },
+      max_concurrent_installers = 4,
     })
 
     mason_lspconfig.setup({
-      -- list of servers for mason to install
       ensure_installed = {
-        "ts_ls",
         "html",
-        --        "htmx",
         "cssls",
         "tailwindcss",
         "svelte",
         "lua_ls",
         "graphql",
         "marksman",
-        --        "java_language_server",
         "pyright",
         "sqlls",
+        "jdtls", -- Java LSP
       },
+      automatic_installation = true,
     })
 
     mason_tool_installer.setup({
       ensure_installed = {
-        "prettier", -- prettier formatter
-        "stylua", -- lua formatter
-        "isort", -- python formatter
-        "black", -- python formatter
-        "pylint",
+        -- Formatters
+        "prettierd",
+        "stylua",
+        "black",
+        "isort",
+        "google-java-format",
+        "shfmt", -- Shell formatter
+        "sqlfmt", -- SQL formatter
+
+        -- Linters
         "eslint_d",
+        "flake8",
+        "pylint",
+        "shellcheck",
+
+        -- Debuggers
+        "debugpy",
       },
+      auto_update = true,
+      run_on_start = true,
     })
   end,
 }
