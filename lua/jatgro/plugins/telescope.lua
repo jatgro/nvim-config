@@ -43,6 +43,7 @@ return {
 
     telescope.load_extension("fzf")
     telescope.load_extension("themes")
+    telescope.load_extension("noice")
 
     -- set keymaps
     local keymap = vim.keymap
@@ -59,5 +60,7 @@ return {
     keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<CR>", { desc = "Find Todos" })
     -- Keybinding for theme switcher
     keymap.set("n", "<leader>th", ":Telescope themes<CR>", { noremap = true, silent = true, desc = "Theme Switcher" })
+    -- keybinding for looking at noice logs in telescope
+    keymap.set("n", "<leader>fn", "<cmd>Telescope noice<CR>", { desc = "Find Todos" })
   end,
 }

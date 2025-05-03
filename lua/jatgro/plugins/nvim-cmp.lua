@@ -3,6 +3,7 @@ return {
   event = "InsertEnter",
   dependencies = {
     "hrsh7th/cmp-buffer", -- source for text in buffer
+    "hrsh7th/cmp-cmdline", -- source for cmp in cmd paths
     "hrsh7th/cmp-path", -- source for file system paths
     {
       "L3MON4D3/LuaSnip",
@@ -45,7 +46,7 @@ return {
       }),
       -- sources for autocompletion
       sources = cmp.config.sources({
-        {name = "nvim_lsp"},
+        { name = "nvim_lsp" },
         { name = "luasnip" }, -- snippets
         { name = "buffer" }, -- text within current buffer
         { name = "path" }, -- file system paths
