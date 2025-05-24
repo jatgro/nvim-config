@@ -1,7 +1,7 @@
 return {
-  "williamboman/mason.nvim",
+  "mason-org/mason.nvim",
   dependencies = {
-    "williamboman/mason-lspconfig.nvim",
+    "mason-org/mason-lspconfig.nvim",
     "WhoIsSethDaniel/mason-tool-installer.nvim",
   },
   config = function()
@@ -26,7 +26,17 @@ return {
     })
 
     mason_lspconfig.setup({
+      -- Updated to use automatic_installation instead of ensure_installed
+      -- (more flexible approach)
+      automatic_installation = {
+        exclude = {}, -- List of LSPs to exclude from automatic installation
+      },
+    })
+
+    -- Moved ensure_installed to mason_tool_installer for better organization
+    mason_tool_installer.setup({
       ensure_installed = {
+        -- LSP servers
         "html",
         "cssls",
         "tailwindcss",
@@ -36,21 +46,15 @@ return {
         "marksman",
         "pyright",
         "sqlls",
-        "jdtls", -- Java LSP
-      },
-      automatic_installation = true,
-    })
 
-    mason_tool_installer.setup({
-      ensure_installed = {
         -- Formatters
         "prettierd",
         "stylua",
         "black",
         "isort",
         "google-java-format",
-        "shfmt", -- Shell formatter
-        "sqlfmt", -- SQL formatter
+        "shfmt",
+        "sqlfmt",
 
         -- Linters
         "eslint_d",
