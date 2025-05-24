@@ -56,12 +56,15 @@ return {
         "google-java-format",
         "shfmt",
         "sqlfmt",
+        "gofumpt",
 
         -- Linters
         "eslint_d",
         "flake8",
         "pylint",
         "shellcheck",
+        "goimports-reviser",
+        "golines",
 
         -- Debuggers
         "debugpy",
