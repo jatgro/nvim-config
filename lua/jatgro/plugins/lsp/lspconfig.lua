@@ -57,7 +57,27 @@ return {
         map("n", "[d", vim.diagnostic.goto_prev, "Previous diagnostic")
         map("n", "]d", vim.diagnostic.goto_next, "Next diagnostic")
         map("n", "K", vim.lsp.buf.hover, "Hover documentation")
-        map("n", "<leader>f", vim.lsp.buf.format, "Format buffer")
+        map("n", "<leader>mp", function()
+          vim.lsp.buf.format({
+            async = true,
+            filter = function(client)
+              -- Priority 1: Use none-ls where available
+              if client.name == "none-ls" then
+                return true
+              end
+
+              -- Priority 2: Allow these LSP formatters
+              local lsp_formatters = {
+                "lua_ls", -- Lua
+                "svelte", -- Svelte
+                "gopls", -- Go (if you want gopls formatting)
+                "jdtls", -- Java (if you want jdtls formatting)
+              }
+
+              return vim.tbl_contains(lsp_formatters, client.name)
+            end,
+          })
+        end, "Format buffer")
         map("n", "<leader>cl", "<cmd>lua vim.lsp.codelens.run()<CR>", "Run code lens")
 
         -- Only set LSP restart if available
