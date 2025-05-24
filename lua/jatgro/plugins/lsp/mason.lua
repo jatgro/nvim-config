@@ -46,6 +46,7 @@ return {
         "marksman",
         "pyright",
         "sqlls",
+        "gopls",
 
         -- Formatters
         "prettierd",

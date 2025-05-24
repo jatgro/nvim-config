@@ -9,6 +9,7 @@ return {
   },
   config = function()
     local lspconfig = require("lspconfig")
+    local util = require("lspconfig/util")
     local mason_lspconfig = require("mason-lspconfig")
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
     local keymap = vim.keymap
@@ -113,6 +114,18 @@ return {
           "svelte",
           "javascriptreact",
           "typescriptreact",
+        }
+      elseif server_name == "gopls" then
+        server_config.filetypes = { "go", "gomod", "gowork", "gotmpl" }
+        server_config.root_dir = util.root_pattern("go.work", "go.mod", ".git")
+        server_config.settings = {
+          gopls = {
+            completeUnimported = true,
+            usePlaceholders = true,
+            analyses = {
+              unusedparams = true,
+            },
+          },
         }
       elseif server_name == "jdtls" then
         -- Skip as we handle Java separately
