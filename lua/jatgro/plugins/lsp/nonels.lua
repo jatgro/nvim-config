@@ -40,6 +40,7 @@ return {
         -- Shell/Bash (common companion to other langs)
         none_ls.builtins.diagnostics.shellcheck,
         none_ls.builtins.formatting.shfmt,
+      },
         on_attach = function(client, bufnr)
           if client.supports_method("textDocument/formatting") then
             vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
