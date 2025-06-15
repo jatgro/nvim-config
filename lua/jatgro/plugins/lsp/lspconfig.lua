@@ -88,6 +88,7 @@ return {
     })
 
     -- First ensure mason-lspconfig is setup
+    require("mason").setup()
     mason_lspconfig.setup()
 
     -- Then get the list of installed servers

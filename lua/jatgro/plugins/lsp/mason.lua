@@ -25,13 +25,7 @@ return {
       max_concurrent_installers = 4,
     })
 
-    mason_lspconfig.setup({
-      -- Updated to use automatic_installation instead of ensure_installed
-      -- (more flexible approach)
-      automatic_installation = {
-        exclude = {}, -- List of LSPs to exclude from automatic installation
-      },
-    })
+    mason_lspconfig.setup({})
 
     -- Moved ensure_installed to mason_tool_installer for better organization
     mason_tool_installer.setup({
