@@ -159,15 +159,14 @@ return {
 
     -- Java LSP setup (handled separately)
     jdtls.start_or_attach({
-      cmd = { -- Your existing Java config from previous file },
-        root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
-        capabilities = capabilities,
-        settings = {
-          java = {
-            configuration = {
-              runtimes = {
-                { name = "JavaSE-23", path = "/Library/Java/JavaVirtualMachines/openjdk-23.jdk/Contents/Home" },
-              },
+      cmd = { "jdtls" }, -- or the full path to the jdtls executable if not in PATH
+      root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
+      capabilities = capabilities,
+      settings = {
+        java = {
+          configuration = {
+            runtimes = {
+              { name = "JavaSE-23", path = "/Library/Java/JavaVirtualMachines/openjdk-23.jdk/Contents/Home" },
             },
           },
         },
