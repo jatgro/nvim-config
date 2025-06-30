@@ -22,10 +22,29 @@ return {
           package_uninstalled = "✗",
         },
       },
-      max_concurrent_installers = 4,
+      -- max_concurrent_installers = 4,
     })
 
-    mason_lspconfig.setup({})
+    mason_lspconfig.setup({
+      ensure_installed = {
+        "html",
+        "cssls",
+        "css_variables",
+        "cssmodules_ls",
+        "tailwindcss",
+        "svelte",
+        "lua_ls",
+        "bashls",
+        "gopls",
+        "graphql",
+        "eslint",
+        "pyright",
+        "yamlls",
+        "markdown_oxide",
+      },
+      automatic_enable = false,
+      automatic_installation = true,
+    })
 
     -- Moved ensure_installed to mason_tool_installer for better organization
     mason_tool_installer.setup({

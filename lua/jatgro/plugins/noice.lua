@@ -18,5 +18,9 @@ return {
       -- ... your noice setup options
     })
     vim.keymap.set("n", "<leader>nd", "<cmd>Noice dismiss<cr>", { desc = "Dismiss Noice Notifications" })
+    -- Set a custom background color for notifications
+    require("notify").setup({
+      background_colour = "#1a1b26", -- or any RGB hex you prefer
+    })
   end,
 }

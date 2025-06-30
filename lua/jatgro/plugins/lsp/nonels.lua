@@ -4,24 +4,23 @@ return {
   "nvimtools/none-ls.nvim",
   dependencies = { "nvim-lua/plenary.nvim" },
   config = function()
-    local none_ls = require("none-ls")
+    local null_ls = require("null-ls")
     local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-    none_ls.setup({
+    null_ls.setup({
       sources = {
         -- Formatting/Diagnostics for your existing languages:
         -- Go (enhancements beyond gopls)
-        none_ls.builtins.formatting.gofumpt,
-        none_ls.builtins.formatting.goimports_reviser,
-        none_ls.builtins.formatting.golines,
+        null_ls.builtins.formatting.gofumpt,
+        null_ls.builtins.formatting.goimports_reviser,
+        null_ls.builtins.formatting.golines,
 
         -- Lua (complements lua_ls)
-        none_ls.builtins.formatting.stylua,
+        null_ls.builtins.formatting.stylua,
 
         -- JavaScript/TypeScript (complements Svelte/GraphQL/Emmet setup)
-        none_ls.builtins.diagnostics.eslint_d,
-        none_ls.builtins.code_actions.eslint_d,
-        none_ls.builtins.formatting.prettier.with({
+        
+        null_ls.builtins.formatting.prettier.with({
           filetypes = {
             "javascript",
             "typescript",
@@ -35,13 +34,23 @@ return {
         }),
 
         -- Java (complements jdtls)
-        none_ls.builtins.formatting.google_java_format,
+        null_ls.builtins.formatting.google_java_format,
 
         -- Shell/Bash (common companion to other langs)
-        none_ls.builtins.diagnostics.shellcheck,
-        none_ls.builtins.formatting.shfmt,
+        -- null_ls.builtins.diagnostics.shellcheck,
+        null_ls.builtins.formatting.shfmt,
+
+        -- ESLint diagnostics and code actions
+        null_ls.builtins.diagnostics.eslint_d.with({
+          command = vim.fn.stdpath("data") .. "/mason/bin/eslint_d",
+        }),
+        null_ls.builtins.code_actions.eslint.with({
+          command = vim.fn.stdpath("data") .. "/mason/bin/eslint",
+        }),
       },
       on_attach = function(client, bufnr)
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false
         if client.supports_method("textDocument/formatting") then
           vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
           vim.api.nvim_create_autocmd("BufWritePre", {
