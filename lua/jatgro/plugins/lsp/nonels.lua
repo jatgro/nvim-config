@@ -19,7 +19,7 @@ return {
         null_ls.builtins.formatting.stylua,
 
         -- JavaScript/TypeScript (complements Svelte/GraphQL/Emmet setup)
-        
+
         null_ls.builtins.formatting.prettier.with({
           filetypes = {
             "javascript",
@@ -41,12 +41,9 @@ return {
         null_ls.builtins.formatting.shfmt,
 
         -- ESLint diagnostics and code actions
-        null_ls.builtins.diagnostics.eslint_d.with({
-          command = vim.fn.stdpath("data") .. "/mason/bin/eslint_d",
-        }),
-        null_ls.builtins.code_actions.eslint.with({
-          command = vim.fn.stdpath("data") .. "/mason/bin/eslint",
-        }),
+        -- null_ls.builtins.code_actions.eslint.with({
+        --   command = vim.fn.stdpath("data") .. "/mason/bin/eslint",
+        -- }),
       },
       on_attach = function(client, bufnr)
         client.server_capabilities.documentFormattingProvider = false
