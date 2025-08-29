@@ -10,9 +10,9 @@ return {
     local treesitter = require("nvim-treesitter.configs")
 
     -- enable folding with Treesitter
-    vim.opt.foldmethod = "expr"
+    vim.opt.foldmethod = "indentation"
     vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-    vim.opt.foldenable = false -- disable folding by default
+    -- vim.opt.foldenable = true -- disable folding by default
 
     -- configure treesitter
     treesitter.setup({ -- enable syntax highlighting
@@ -50,6 +50,7 @@ return {
         "python",
         "sql",
         "xml",
+        "toml",
       },
       incremental_selection = {
         enable = true,

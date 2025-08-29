@@ -148,6 +148,16 @@ return {
             },
           },
         }
+      elseif server_name == "pyright" then
+        server_config.settings = {
+          python = {
+            analysis = {
+              autoSearchPaths = true,
+              diagnosticMode = "workspace",
+              useLibraryCodeForTypes = true,
+            },
+          },
+        }
       elseif server_name == "jdtls" then
         -- Skip as we handle Java separately
         goto continue

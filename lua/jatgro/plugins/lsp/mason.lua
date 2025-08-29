@@ -3,6 +3,8 @@ return {
   dependencies = {
     "mason-org/mason-lspconfig.nvim",
     "WhoIsSethDaniel/mason-tool-installer.nvim",
+    "jay-babu/mason-nvim-dap.nvim",
+    "jay-babu/mason-null-ls.nvim",
   },
   config = function()
     -- import mason
@@ -60,12 +62,11 @@ return {
         "pyright",
         "sqlls",
         "gopls",
+        "ruff-lsp",
 
         -- Formatters
         "prettierd",
         "stylua",
-        "black",
-        "isort",
         "google-java-format",
         "shfmt",
         "sqlfmt",
@@ -73,8 +74,6 @@ return {
 
         -- Linters
         "eslint_d",
-        "flake8",
-        "pylint",
         "shellcheck",
         "goimports-reviser",
         "golines",
