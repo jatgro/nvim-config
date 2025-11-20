@@ -1,6 +1,7 @@
 return {
   {
     "folke/tokyonight.nvim",
+    lazy = true,
     priority = 1000,
     config = function()
       require("jatgro.colorscheme.tokyonight").setup()
@@ -8,7 +9,7 @@ return {
   },
   {
     "shaunsingh/nord.nvim",
-    lazy = false,
+    lazy = true,
     priority = 1000,
     config = function()
       require("jatgro.colorscheme.nord").setup()
@@ -17,6 +18,7 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    lazy = true,
     priority = 1000,
     config = function()
       require("jatgro.colorscheme.catppuccin").setup()
@@ -24,6 +26,7 @@ return {
   },
   {
     "EdenEast/nightfox.nvim",
+    lazy = true,
     priority = 1000,
     config = function()
       require("jatgro.colorscheme.nightfox").setup()
@@ -31,11 +34,12 @@ return {
   },
   {
     "olimorris/onedarkpro.nvim",
-    priority = 1000, -- Ensure it loads first
+    lazy = true,
+    priority = 1000,
   },
   {
     "scottmckendry/cyberdream.nvim",
-    lazy = false,
+    lazy = true,
     priority = 1000,
     config = function()
       require("jatgro.colorscheme.cyberdream").setup()

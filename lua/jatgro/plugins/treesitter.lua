@@ -10,14 +10,24 @@ return {
     local treesitter = require("nvim-treesitter.configs")
 
     -- enable folding with Treesitter
-    vim.opt.foldmethod = "indentation"
-    vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-    -- vim.opt.foldenable = true -- disable folding by default
+    vim.opt.foldmethod = "expr"
+    vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    vim.opt.foldenable = false -- disable folding by default
+    vim.opt.foldlevel = 99 -- unfold everything by default
 
     -- configure treesitter
     treesitter.setup({ -- enable syntax highlighting
       highlight = {
         enable = true,
+        -- Disable on large files or invalid windows to prevent errors
+        disable = function(lang, buf)
+          local max_filesize = 100 * 1024 -- 100 KB
+          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+          if ok and stats and stats.size > max_filesize then
+            return true
+          end
+        end,
+        additional_vim_regex_highlighting = false,
       },
       -- enable indentation
       indent = { enable = true },

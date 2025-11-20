@@ -7,10 +7,10 @@ return {
     conform.setup({
       formatters_by_ft = {
         -- Web Development
-        javascript = { "prettierd" },
-        typescript = { "prettierd" },
-        javascriptreact = { "prettierd" },
-        typescriptreact = { "prettierd" },
+        javascript = { "prettierd", "eslint_d" },
+        typescript = { "prettierd", "eslint_d" },
+        javascriptreact = { "prettierd", "eslint_d" },
+        typescriptreact = { "prettierd", "eslint_d" },
         svelte = { "prettierd" },
         css = { "prettierd" },
         html = { "prettierd" },
@@ -24,12 +24,11 @@ return {
         
         -- Programming Languages
         lua = { "stylua" },
-        python = { "isort", "black" },
+        python = { "ruff_format", "ruff_fix" },
         java = { "google-java-format" },
         sh = { "shfmt" },
         sql = { "sqlfmt" },
-        
-        -- Add more filetypes as needed
+        go = { "gofumpt", "goimports-reviser", "golines" },
       },
       
       format_on_save = {
@@ -64,14 +63,6 @@ return {
         async = false,
         timeout_ms = 1000,
       })
-    end, { desc = "[M]arkup [P]rettify (format file/range)" })
-
-    -- Create autocmd to format on save for specific filetypes
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = "*",
-      callback = function(args)
-        conform.format({ bufnr = args.buf })
-      end,
-    })
+    end, { desc = "Format file or range" })
   end,
 }

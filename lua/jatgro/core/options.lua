@@ -39,3 +39,16 @@ opt.clipboard:append("unnamedplus") -- use system clipboard as default register
 -- split windows
 opt.splitright = true -- split vertical window to the right
 opt.splitbelow = true -- split horizontral window to the bottom
+
+-- Suppress treesitter invalid window errors
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    local original_notify = vim.notify
+    vim.notify = function(msg, level, opts)
+      if type(msg) == "string" and msg:match("Invalid window id") then
+        return
+      end
+      original_notify(msg, level, opts)
+    end
+  end,
+})

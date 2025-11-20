@@ -5,104 +5,74 @@ return {
     "hrsh7th/cmp-nvim-lsp",
     { "antosha417/nvim-lsp-file-operations", config = true },
     { "folke/neodev.nvim", opts = {} },
-    "mfussenegger/nvim-jdtls", -- Added Java LSP dependency
+    "mason-org/mason-lspconfig.nvim",
+    "mfussenegger/nvim-jdtls",
   },
   config = function()
     local lspconfig = require("lspconfig")
     local util = require("lspconfig/util")
-    local mason_lspconfig = require("mason-lspconfig")
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
-    local keymap = vim.keymap
-    local jdtls = require("jdtls") -- Added Java LSP
 
     -- Enhanced capabilities
-    local capabilities = vim.tbl_deep_extend("force", cmp_nvim_lsp.default_capabilities(), {
-      textDocument = {
-        codeLens = { dynamicRegistration = true },
+    local capabilities = cmp_nvim_lsp.default_capabilities()
+
+    -- Diagnostic configuration
+    vim.diagnostic.config({
+      virtual_text = {
+        prefix = "●",
       },
-      workspace = {
-        fileOperations = {
-          didRename = true,
-          willRename = true,
-        },
-      },
+      signs = true,
+      underline = true,
+      update_in_insert = false,
+      severity_sort = true,
     })
 
-    -- Improved diagnostic signs
-    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+    -- Diagnostic signs
+    local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
     for type, icon in pairs(signs) do
       local hl = "DiagnosticSign" .. type
       vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
     end
 
+    -- Keymaps on LSP attach
     vim.api.nvim_create_autocmd("LspAttach", {
       group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
       callback = function(ev)
-        local opts = { buffer = ev.buf, silent = true }
-
-        -- Enhanced keymaps
         local map = function(mode, lhs, rhs, desc)
-          vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", opts, { desc = desc }))
+          vim.keymap.set(mode, lhs, rhs, { buffer = ev.buf, silent = true, desc = desc })
         end
 
+        -- Navigation
         map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
-        map("n", "gd", vim.lsp.buf.definition, "Show definition")
+        map("n", "gd", vim.lsp.buf.definition, "Go to definition")
         map("n", "gR", "<cmd>Telescope lsp_references<CR>", "Show references")
         map("n", "gi", "<cmd>Telescope lsp_implementations<CR>", "Show implementations")
         map("n", "gtd", "<cmd>Telescope lsp_type_definitions<CR>", "Show type definitions")
+        
+        -- Actions
         map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code actions")
         map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
+        
+        -- Diagnostics
         map("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", "Buffer diagnostics")
         map("n", "<leader>d", vim.diagnostic.open_float, "Line diagnostics")
         map("n", "[d", vim.diagnostic.goto_prev, "Previous diagnostic")
         map("n", "]d", vim.diagnostic.goto_next, "Next diagnostic")
+        
+        -- Documentation
         map("n", "K", vim.lsp.buf.hover, "Hover documentation")
+        
+        -- Formatting
         map("n", "<leader>mp", function()
-          vim.lsp.buf.format({
-            async = true,
-            filter = function(client)
-              -- Priority 1: Use none-ls where available
-              if client.name == "none-ls" then
-                return true
-              end
-
-              -- Priority 2: Allow these LSP formatters
-              local lsp_formatters = {
-                "lua_ls", -- Lua
-                "svelte", -- Svelte
-                "gopls", -- Go (if you want gopls formatting)
-                "jdtls", -- Java (if you want jdtls formatting)
-              }
-
-              return vim.tbl_contains(lsp_formatters, client.name)
-            end,
-          })
+          vim.lsp.buf.format({ async = true })
         end, "Format buffer")
-        map("n", "<leader>cl", "<cmd>lua vim.lsp.codelens.run()<CR>", "Run code lens")
-
-        -- Only set LSP restart if available
-        if package.loaded["lsp-restart"] then
-          map("n", "<leader>rs", "<cmd>LspRestart<CR>", "Restart LSP")
-        end
       end,
     })
 
-    -- First ensure mason-lspconfig is setup
-    require("mason").setup()
-    mason_lspconfig.setup()
-
-    -- Then get the list of installed servers
-    local installed_servers = mason_lspconfig.get_installed_servers()
-
-    -- Configure each server explicitly
-    for _, server_name in ipairs(installed_servers) do
-      local server_config = {
-        capabilities = capabilities,
-      }
-
-      -- Server-specific configurations
-      if server_name == "lua_ls" then
-        server_config.settings = {
+    -- Server configurations
+    local servers = {
+      lua_ls = {
+        settings = {
           Lua = {
             runtime = { version = "LuaJIT" },
             diagnostics = { globals = { "vim" } },
@@ -113,43 +83,21 @@ return {
             telemetry = { enable = false },
             completion = { callSnippet = "Replace" },
           },
-        }
-      elseif server_name == "svelte" then
-        server_config.on_attach = function(client, bufnr)
-          client.server_capabilities.documentFormattingProvider = true
-          vim.api.nvim_create_autocmd("BufWritePost", {
-            pattern = { "*.js", "*.ts" },
-            callback = function(ctx)
-              client.notify("$/onDidChangeTsOrJsFile", { uri = vim.uri_from_fname(ctx.file) })
-            end,
-          })
-        end
-      elseif server_name == "graphql" then
-        server_config.filetypes = { "graphql", "gql", "svelte", "typescript", "javascript" }
-      elseif server_name == "emmet_ls" then
-        server_config.filetypes = {
-          "html",
-          "css",
-          "scss",
-          "less",
-          "svelte",
-          "javascriptreact",
-          "typescriptreact",
-        }
-      elseif server_name == "gopls" then
-        server_config.filetypes = { "go", "gomod", "gowork", "gotmpl" }
-        server_config.root_dir = util.root_pattern("go.work", "go.mod", ".git")
-        server_config.settings = {
+        },
+      },
+      gopls = {
+        filetypes = { "go", "gomod", "gowork", "gotmpl" },
+        root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+        settings = {
           gopls = {
             completeUnimported = true,
             usePlaceholders = true,
-            analyses = {
-              unusedparams = true,
-            },
+            analyses = { unusedparams = true },
           },
-        }
-      elseif server_name == "pyright" then
-        server_config.settings = {
+        },
+      },
+      pyright = {
+        settings = {
           python = {
             analysis = {
               autoSearchPaths = true,
@@ -157,30 +105,31 @@ return {
               useLibraryCodeForTypes = true,
             },
           },
-        }
-      elseif server_name == "jdtls" then
-        -- Skip as we handle Java separately
-        goto continue
-      end
-
-      lspconfig[server_name].setup(server_config)
-      ::continue::
-    end
-
-    -- Java LSP setup (handled separately)
-    jdtls.start_or_attach({
-      cmd = { "jdtls" }, -- or the full path to the jdtls executable if not in PATH
-      root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
-      capabilities = capabilities,
-      settings = {
-        java = {
-          configuration = {
-            runtimes = {
-              { name = "JavaSE-23", path = "/Library/Java/JavaVirtualMachines/openjdk-23.jdk/Contents/Home" },
-            },
-          },
         },
       },
-    })
+      svelte = {
+        on_attach = function(client)
+          vim.api.nvim_create_autocmd("BufWritePost", {
+            pattern = { "*.js", "*.ts" },
+            callback = function(ctx)
+              client.notify("$/onDidChangeTsOrJsFile", { uri = vim.uri_from_fname(ctx.file) })
+            end,
+          })
+        end,
+      },
+      graphql = {
+        filetypes = { "graphql", "gql", "svelte", "typescript", "javascript" },
+      },
+      emmet_ls = {
+        filetypes = {
+          "html", "css", "scss", "less", "svelte",
+          "javascriptreact", "typescriptreact",
+        },
+      },
+    }
+
+    -- Expose server configurations and capabilities for mason-lspconfig
+    _G.lsp_servers = servers
+    _G.lsp_capabilities = capabilities
   end,
 }

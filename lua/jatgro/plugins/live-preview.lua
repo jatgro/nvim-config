@@ -1,5 +1,6 @@
 return {
   "brianhuster/live-preview.nvim",
+  ft = { "markdown", "html", "svg" },
   dependencies = {
     -- You can choose one of the following pickers
     "nvim-telescope/telescope.nvim",

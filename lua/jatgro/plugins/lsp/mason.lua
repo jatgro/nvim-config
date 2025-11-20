@@ -5,6 +5,7 @@ return {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     "jay-babu/mason-nvim-dap.nvim",
     "jay-babu/mason-null-ls.nvim",
+    "neovim/nvim-lspconfig", -- Ensure lspconfig loads first
   },
   config = function()
     -- import mason
@@ -24,6 +25,13 @@ return {
           package_uninstalled = "✗",
         },
       },
+      pip = {
+        upgrade_pip = true,
+      },
+      -- Configure npm to use public registry for Mason installations
+      registries = {
+        "github:mason-org/mason-registry",
+      },
       -- max_concurrent_installers = 4,
     })
 
@@ -31,8 +39,6 @@ return {
       ensure_installed = {
         "html",
         "cssls",
-        "css_variables",
-        "cssmodules_ls",
         "tailwindcss",
         "svelte",
         "lua_ls",
@@ -42,28 +48,37 @@ return {
         "eslint",
         "pyright",
         "yamlls",
-        "markdown_oxide",
       },
-      automatic_enable = false,
       automatic_installation = true,
+    })
+
+    -- Setup handlers for LSP servers
+    mason_lspconfig.setup_handlers({
+      -- Default handler for all servers
+      function(server_name)
+        if server_name == "jdtls" then
+          return -- Handle Java separately with nvim-jdtls
+        end
+        
+        local lspconfig = require("lspconfig")
+        local cmp_nvim_lsp = require("cmp_nvim_lsp")
+        local capabilities = cmp_nvim_lsp.default_capabilities()
+        
+        -- Get server-specific config from lspconfig if available
+        local servers = _G.lsp_servers or {}
+        local server_config = servers[server_name] or {}
+        
+        -- Set capabilities
+        server_config.capabilities = capabilities
+        
+        -- Setup the server
+        lspconfig[server_name].setup(server_config)
+      end,
     })
 
     -- Moved ensure_installed to mason_tool_installer for better organization
     mason_tool_installer.setup({
       ensure_installed = {
-        -- LSP servers
-        "html",
-        "cssls",
-        "tailwindcss",
-        "svelte",
-        "lua_ls",
-        "graphql",
-        "marksman",
-        "pyright",
-        "sqlls",
-        "gopls",
-        "ruff-lsp",
-
         -- Formatters
         "prettierd",
         "stylua",
@@ -81,7 +96,7 @@ return {
         -- Debuggers
         "debugpy",
       },
-      auto_update = true,
+      auto_update = false,
       run_on_start = true,
     })
   end,
