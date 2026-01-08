@@ -30,12 +30,18 @@ return {
           },
           enable_previewer = true,
           enable_live_preview = true,
-          ignore = { "default", "desert", "elflord", "habamax" },
-          light_themes = { ignore = false, keywords = { "light", "day", "frappe" } },
-          dark_themes = { ignore = false, keywords = { "dark", "night", "black" } },
+          -- Remove filters that might be hiding Catppuccin variants
+          ignore = {},
+          light_themes = { 
+            ignore = false, 
+            keywords = { "light", "day", "latte" } 
+          },
+          dark_themes = { 
+            ignore = false, 
+            keywords = { "dark", "night", "black", "mocha", "macchiato", "frappe" } 
+          },
           persist = {
             enabled = true,
-            --[[           path = vim.fn.stdpath("config") .. "/lua/jatgro/current-theme.lua" ]]
           },
         },
       },

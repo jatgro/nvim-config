@@ -2,7 +2,7 @@ local M = {}
 
 function M.setup()
   require("catppuccin").setup({
-    flavour = "mocha",
+    flavour = "auto", -- Let Catppuccin auto-detect or set manually
     styles = {
       comments = { "italic" },
       conditionals = { "italic" },
@@ -17,13 +17,24 @@ function M.setup()
       types = { "italic" },
       operators = { "italic" },
     },
+    integrations = {
+      telescope = {
+        enabled = true,
+      },
+      alpha = true,
+      gitsigns = true,
+      nvimtree = true,
+      treesitter = true,
+      notify = true,
+      mini = {
+        enabled = true,
+      },
+    },
   })
 
   -- Set italic for default text
   vim.api.nvim_set_hl(0, "Normal", { italic = true })
   vim.api.nvim_set_hl(0, "NormalNC", { italic = true })
-
-  vim.cmd.colorscheme("catppuccin")
 end
 
 return M
