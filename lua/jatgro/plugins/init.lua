@@ -1,4 +1,5 @@
-return {
-  "nvim-lua/plenary.nvim", -- lua functions that many plugins use
-  "christoomey/vim-tmux-navigator" -- tmux & split window navigation
-}
+require('jatgro.plugins.plugin1')
+require('jatgro.plugins.plugin2')
+require('jatgro.plugins.plugin3')
+require('jatgro.plugins.plugin4')
+require('jatgro.plugins.plugin5')
