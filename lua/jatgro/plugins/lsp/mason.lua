@@ -1,4 +1,3 @@
-
 -- mason.lua (Mason v2 / Mason-LSPConfig v2 for Neovim 0.11+)
 -- Requires: mason.nvim >= 2.0, mason-lspconfig.nvim >= 2.0, nvim-lspconfig >= 2.0
 -- NOTE: Neovim 0.11 introduced `vim.lsp.config` which this file uses.
@@ -53,19 +52,19 @@ return {
         "tailwindcss",
         "svelte",
         "bashls",
-        "gopls",
+        "gopls",           -- Go LSP
         "graphql",
         "eslint",
         "pyright",
         "yamlls",
         -- Add more servers as needed (e.g., "ts_ls" for TypeScript in lspconfig v2)
       },
-      -- auto-enable all servers except those you’ll manage manually
+      -- auto-enable all servers except those you'll manage manually
       automatic_enable = { exclude = { "jdtls" } }, -- Java typically uses nvim-jdtls separately
     })
 
     ---------------------------------------------------------------------------
-    -- 3) Global LSP defaults using Neovim’s native API (0.11+)
+    -- 3) Global LSP defaults using Neovim's native API (0.11+)
     --    This is the recommended way in v2-era setups.
     --    It applies to all enabled LSP clients unless overridden per server.
     ---------------------------------------------------------------------------
@@ -87,3 +86,46 @@ return {
       --   map("n", "<leader>rn", vim.lsp.buf.rename,           "Rename symbol")
       --   map("n", "[d", vim.diagnostic.goto_prev,             "Prev diagnostic")
       --   map("n", "]d", vim.diagnostic.goto_next,             "Next diagnostic")
+      -- end,
+    })
+
+    ---------------------------------------------------------------------------
+    -- 4) Mason-tool-installer: auto-install formatters, linters, DAP tools
+    ---------------------------------------------------------------------------
+    require("mason-tool-installer").setup({
+      ensure_installed = {
+        -- LSP servers
+        "lua_ls",
+        "html",
+        "cssls",
+        "tailwindcss",
+        "svelte",
+        "bashls",
+        "gopls",           -- Go LSP
+        "graphql",
+        "eslint",
+        "pyright",
+        "yamlls",
+
+        -- Formatters
+        "stylua",           -- Lua formatter
+        "prettier",         -- JS/TS/JSON/YAML formatter
+        "black",            -- Python formatter
+        "gofmt",            -- Go formatter (built-in via gopls)
+        "shfmt",            -- Shell formatter
+
+        -- Linters
+        "eslint_d",         -- JavaScript/TypeScript linter
+        "pylint",           -- Python linter
+        "shellcheck",       -- Shell script linter
+        "golangci-lint",    -- Go linter
+
+        -- DAP (optional)
+        -- "debugpy",        -- Python DAP
+        -- "delve",          -- Go DAP
+      },
+      auto_update = true,
+      run_on_start = true,
+    })
+  end,
+}
