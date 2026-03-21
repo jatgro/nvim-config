@@ -1,5 +1,32 @@
-require('jatgro.plugins.plugin1')
-require('jatgro.plugins.plugin2')
-require('jatgro.plugins.plugin3')
-require('jatgro.plugins.plugin4')
-require('jatgro.plugins.plugin5')
+return {
+  "nvim-lua/plenary.nvim", -- lua functions that many plugins use
+  "christoomey/vim-tmux-navigator", -- tmux & split window navigation
+  require("jatgro.plugins.alpha"),
+  require("jatgro.plugins.auto-session"),
+  require("jatgro.plugins.autopairs"),
+  require("jatgro.plugins.bufferline"),
+  require("jatgro.plugins.colorscheme"),
+  require("jatgro.plugins.comment"),
+  require("jatgro.plugins.copilot"),
+  require("jatgro.plugins.dressing"),
+  require("jatgro.plugins.formatting"),
+  require("jatgro.plugins.gitsigns"),
+  require("jatgro.plugins.indent-blankline"),
+  require("jatgro.plugins.lazygit"),
+  require("jatgro.plugins.linting"),
+  require("jatgro.plugins.live-preview"),
+  require("jatgro.plugins.lualine"),
+  require("jatgro.plugins.md-preview"),
+  require("jatgro.plugins.molten"),
+  require("jatgro.plugins.noice"),
+  require("jatgro.plugins.nvim-cmp"),
+  require("jatgro.plugins.nvim-tree"),
+  require("jatgro.plugins.substitute"),
+  require("jatgro.plugins.surround"),
+  require("jatgro.plugins.telescope"),
+  require("jatgro.plugins.todo-comments"),
+  require("jatgro.plugins.treesitter"),
+  require("jatgro.plugins.trouble"),
+  require("jatgro.plugins.vim-maximizer"),
+  require("jatgro.plugins.which-key"),
+}
