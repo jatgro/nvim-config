@@ -1,4 +1,32 @@
 return {
   "nvim-lua/plenary.nvim", -- lua functions that many plugins use
-  "christoomey/vim-tmux-navigator" -- tmux & split window navigation
+  "christoomey/vim-tmux-navigator", -- tmux & split window navigation
+  { import = "jatgro.plugins.alpha" },
+  { import = "jatgro.plugins.auto-session" },
+  { import = "jatgro.plugins.autopairs" },
+  { import = "jatgro.plugins.bufferline" },
+  { import = "jatgro.plugins.colorscheme" },
+  { import = "jatgro.plugins.comment" },
+  { import = "jatgro.plugins.copilot" },
+  { import = "jatgro.plugins.dressing" },
+  { import = "jatgro.plugins.formatting" },
+  { import = "jatgro.plugins.gitsigns" },
+  { import = "jatgro.plugins.indent-blankline" },
+  { import = "jatgro.plugins.lazygit" },
+  { import = "jatgro.plugins.linting" },
+  { import = "jatgro.plugins.live-preview" },
+  { import = "jatgro.plugins.lualine" },
+  { import = "jatgro.plugins.md-preview" },
+  { import = "jatgro.plugins.molten" },
+  { import = "jatgro.plugins.noice" },
+  { import = "jatgro.plugins.nvim-cmp" },
+  { import = "jatgro.plugins.nvim-tree" },
+  { import = "jatgro.plugins.substitute" },
+  { import = "jatgro.plugins.surround" },
+  { import = "jatgro.plugins.telescope" },
+  { import = "jatgro.plugins.todo-comments" },
+  { import = "jatgro.plugins.treesitter" },
+  { import = "jatgro.plugins.trouble" },
+  { import = "jatgro.plugins.vim-maximizer" },
+  { import = "jatgro.plugins.which-key" },
 }

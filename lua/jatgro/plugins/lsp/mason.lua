@@ -1,18 +1,28 @@
+-- mason.lua (Mason v2 / Mason-LSPConfig v2 for Neovim 0.11+)
+-- Requires: mason.nvim >= 2.0, mason-lspconfig.nvim >= 2.0, nvim-lspconfig >= 2.0
+-- NOTE: Neovim 0.11 introduced `vim.lsp.config` which this file uses.
+-- Ref: https://github.com/mason-org/mason-lspconfig.nvim (v2 docs & requirements)
+--      https://newreleases.io/.../mason-lspconfig.nvim/release/v2.0.0 (breaking changes)
+--      https://kosu.me/.../breaking-changes-in-mason-2-0-how-i-updated-my-neovim-lsp-config (migration notes)
+
 return {
   "mason-org/mason.nvim",
   dependencies = {
     "mason-org/mason-lspconfig.nvim",
     "WhoIsSethDaniel/mason-tool-installer.nvim",
-    "jay-babu/mason-nvim-dap.nvim",
-    "jay-babu/mason-null-ls.nvim",
-    "neovim/nvim-lspconfig", -- Ensure lspconfig loads first
+    "jay-babu/mason-nvim-dap.nvim",          -- optional: DAP via Mason
+    -- If you use none-ls (null-ls successor), keep this (optional):
+    -- "nvimtools/none-ls.nvim",
+    -- "jay-babu/mason-null-ls.nvim",
+    "neovim/nvim-lspconfig",
+    "hrsh7th/cmp-nvim-lsp",                  -- capabilities for completion
   },
-  config = function()
-    -- import mason
-    local mason = require("mason")
 
-    -- enable mason and configure icons
-    mason.setup({
+  config = function()
+    ---------------------------------------------------------------------------
+    -- 1) Mason core (package manager for LSP/DAP/formatters/linters)
+    ---------------------------------------------------------------------------
+    require("mason").setup({
       ui = {
         icons = {
           package_installed = "✓",
@@ -23,82 +33,98 @@ return {
       pip = {
         upgrade_pip = true,
       },
-      -- Configure npm to use public registry for Mason installations
+      -- You can omit `registries` to use the default.
       registries = {
         "github:mason-org/mason-registry",
       },
-      -- max_concurrent_installers = 4,
     })
 
-    -- import mason-lspconfig after mason is set up
-    local has_mason_lspconfig, mason_lspconfig = pcall(require, "mason-lspconfig")
-    if not has_mason_lspconfig then
-      vim.notify("mason-lspconfig not found. Please run :Lazy sync", vim.log.levels.ERROR)
-      return
-    end
-
-    local mason_tool_installer = require("mason-tool-installer")
-
-    mason_lspconfig.setup({
+    ---------------------------------------------------------------------------
+    -- 2) Mason-LSPConfig v2: install & auto-enable servers (no setup_handlers)
+    --    In v2, `automatic_installation` is removed; use `ensure_installed`.
+    --    `automatic_enable` auto-runs `vim.lsp.enable()` for installed servers.
+    ---------------------------------------------------------------------------
+    require("mason-lspconfig").setup({
       ensure_installed = {
+        "lua_ls",
         "html",
         "cssls",
         "tailwindcss",
         "svelte",
-        "lua_ls",
         "bashls",
-        "gopls",
+        "gopls",           -- Go LSP
         "graphql",
         "eslint",
         "pyright",
         "yamlls",
+        -- Add more servers as needed (e.g., "ts_ls" for TypeScript in lspconfig v2)
       },
-      automatic_installation = true,
-      handlers = {
-        -- Default handler for all servers
-        function(server_name)
-          if server_name == "jdtls" then
-            return -- Handle Java separately with nvim-jdtls
-          end
-
-          local lspconfig = require("lspconfig")
-          local cmp_nvim_lsp = require("cmp_nvim_lsp")
-          local capabilities = cmp_nvim_lsp.default_capabilities()
-
-          -- Get server-specific config from lspconfig if available
-          local servers = _G.lsp_servers or {}
-          local server_config = servers[server_name] or {}
-
-          -- Set capabilities
-          server_config.capabilities = capabilities
-
-          -- Setup the server
-          lspconfig[server_name].setup(server_config)
-        end,
-      },
+      -- auto-enable all servers except those you'll manage manually
+      automatic_enable = { exclude = { "jdtls" } }, -- Java typically uses nvim-jdtls separately
     })
 
-    -- Moved ensure_installed to mason_tool_installer for better organization
-    mason_tool_installer.setup({
+    ---------------------------------------------------------------------------
+    -- 3) Global LSP defaults using Neovim's native API (0.11+)
+    --    This is the recommended way in v2-era setups.
+    --    It applies to all enabled LSP clients unless overridden per server.
+    ---------------------------------------------------------------------------
+    local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+    vim.lsp.config("*", {
+      capabilities = capabilities,
+      -- Example: on_attach for common LSP keymaps
+      -- on_attach = function(client, bufnr)
+      --   local map = function(mode, lhs, rhs, desc)
+      --     vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
+      --   end
+      --   map("n", "gd", "<cmd>Telescope lsp_definitions<CR>", "Go to definition")
+      --   map("n", "gD", vim.lsp.buf.declaration,              "Go to declaration")
+      --   map("n", "gi", "<cmd>Telescope lsp_implementations<CR>", "Go to implementations")
+      --   map("n", "gr", "<cmd>Telescope lsp_references<CR>",  "References")
+      --   map("n", "K",  vim.lsp.buf.hover,                    "Hover documentation")
+      --   map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
+      --   map("n", "<leader>rn", vim.lsp.buf.rename,           "Rename symbol")
+      --   map("n", "[d", vim.diagnostic.goto_prev,             "Prev diagnostic")
+      --   map("n", "]d", vim.diagnostic.goto_next,             "Next diagnostic")
+      -- end,
+    })
+
+    ---------------------------------------------------------------------------
+    -- 4) Mason-tool-installer: auto-install formatters, linters, DAP tools
+    ---------------------------------------------------------------------------
+    require("mason-tool-installer").setup({
       ensure_installed = {
+        -- LSP servers
+        "lua_ls",
+        "html",
+        "cssls",
+        "tailwindcss",
+        "svelte",
+        "bashls",
+        "gopls",           -- Go LSP
+        "graphql",
+        "eslint",
+        "pyright",
+        "yamlls",
+
         -- Formatters
-        "prettierd",
-        "stylua",
-        "google-java-format",
-        "shfmt",
-        "sqlfmt",
-        "gofumpt",
+        "stylua",           -- Lua formatter
+        "prettier",         -- JS/TS/JSON/YAML formatter
+        "black",            -- Python formatter
+        "gofmt",            -- Go formatter (built-in via gopls)
+        "shfmt",            -- Shell formatter
 
         -- Linters
-        "eslint_d",
-        "shellcheck",
-        "goimports-reviser",
-        "golines",
+        "eslint_d",         -- JavaScript/TypeScript linter
+        "pylint",           -- Python linter
+        "shellcheck",       -- Shell script linter
+        "golangci-lint",    -- Go linter
 
-        -- Debuggers
-        "debugpy",
+        -- DAP (optional)
+        -- "debugpy",        -- Python DAP
+        -- "delve",          -- Go DAP
       },
-      auto_update = false,
+      auto_update = true,
       run_on_start = true,
     })
   end,
