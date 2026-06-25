@@ -111,7 +111,7 @@ return {
         "stylua",           -- Lua formatter
         "prettier",         -- JS/TS/JSON/YAML formatter
         "black",            -- Python formatter
-        "gofmt",            -- Go formatter (built-in via gopls)
+        "gofumpt",          -- Go formatter (stricter gofmt)
         "shfmt",            -- Shell formatter
 
         -- Linters
