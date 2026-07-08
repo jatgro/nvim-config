@@ -19,7 +19,7 @@ return {
           i = {
             ["<C-k>"] = actions.move_selection_previous, -- move to previous result
             ["<C-j>"] = actions.move_selection_next, -- move to next result
-            ["<C-q"] = actions.send_selected_to_qflist + actions.open_qflist,
+            ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
           },
         },
       },
@@ -67,6 +67,6 @@ return {
     -- Keybinding for theme switcher
     keymap.set("n", "<leader>th", ":Telescope themes<CR>", { noremap = true, silent = true, desc = "Theme Switcher" })
     -- keybinding for looking at noice logs in telescope
-    keymap.set("n", "<leader>fn", "<cmd>Telescope noice<CR>", { desc = "Find Todos" })
+    keymap.set("n", "<leader>fn", "<cmd>Telescope noice<CR>", { desc = "Find Noice logs" })
   end,
 }

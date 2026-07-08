@@ -3,6 +3,8 @@ local M = {}
 function M.setup()
   require("catppuccin").setup({
     flavour = "auto", -- Let Catppuccin auto-detect or set manually
+    transparent_background = require("jatgro.core.theme").transparent,
+    show_end_of_buffer = not require("jatgro.core.theme").transparent,
     styles = {
       comments = { "italic" },
       conditionals = { "italic" },

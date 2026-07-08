@@ -2,7 +2,7 @@ local M = {}
 
 function M.setup()
   require("cyberdream").setup({
-    transparent = true,
+    transparent = require("jatgro.core.theme").transparent,
     italic_comments = true,
     hide_fillchars = true,
     borderless_telescope = true,

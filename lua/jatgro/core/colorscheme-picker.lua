@@ -34,6 +34,7 @@ function M.apply_colorscheme(colorscheme_name)
     vim.notify("Colorscheme " .. colorscheme_name .. " not found!", vim.log.levels.ERROR)
     return false
   end
+  require("jatgro.core.theme").apply_transparency()
   return true
 end
 
@@ -41,7 +42,7 @@ end
 function M.save_colorscheme(colorscheme_name)
   local file = io.open(M.theme_file, "w")
   if file then
-    file:write('vim.cmd("colorscheme ' .. colorscheme_name .. '")\n')
+    file:write('require("jatgro.core.colorscheme-picker").apply_colorscheme("' .. colorscheme_name .. '")\n')
     file:close()
     vim.notify("Colorscheme saved: " .. colorscheme_name, vim.log.levels.INFO)
   else

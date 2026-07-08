@@ -13,6 +13,11 @@ function M.setup()
 
   require("tokyonight").setup({
     style = "night",
+    transparent = require("jatgro.core.theme").transparent,
+    styles = {
+      sidebars = require("jatgro.core.theme").transparent and "transparent" or "dark",
+      floats = require("jatgro.core.theme").transparent and "transparent" or "dark",
+    },
     on_colors = function(colors)
       colors.bg = bg
       colors.bg_dark = bg_dark
