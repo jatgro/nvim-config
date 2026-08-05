@@ -12,6 +12,7 @@ return {
   { import = "jatgro.plugins.dressing" },
   { import = "jatgro.plugins.formatting" },
   { import = "jatgro.plugins.gitsigns" },
+  { import = "jatgro.plugins.git-worktree" },
   { import = "jatgro.plugins.indent-blankline" },
   { import = "jatgro.plugins.lazygit" },
   { import = "jatgro.plugins.linting" },

@@ -66,4 +66,12 @@ return {
       require("jatgro.colorscheme.cyberdream").setup()
     end,
   },
+  {
+    "uhs-robert/oasis.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("jatgro.colorscheme.oasis").setup()
+    end,
+  },
 }

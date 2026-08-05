@@ -4,4 +4,5 @@ return {
   nord = require("jatgro.colorscheme.nord"),
   catppuccin = require("jatgro.colorscheme.catppuccin"),
   nightfox = require("jatgro.colorscheme.nightfox"),
+  oasis = require("jatgro.colorscheme.oasis"),
 }

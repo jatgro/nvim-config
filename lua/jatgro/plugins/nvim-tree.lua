@@ -58,10 +58,16 @@ return {
 
     nvimtree.setup({
       on_attach = on_attach,
+      sync_root_with_cwd = true,
+      respect_buf_cwd = true,
       view = {
         width = 35,
         relativenumber = true,
         -- side = "right",
+      },
+      update_focused_file = {
+        enable = true,
+        update_root = true,
       },
 
       -- change folder arrow icons

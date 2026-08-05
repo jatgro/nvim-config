@@ -17,6 +17,7 @@ return {
       { "<leader>e", group = "Explorer" },
       { "<leader>f", group = "Find" },
       { "<leader>g", group = "Git" },
+      { "<leader>gw", group = "Git Worktree" },
       { "<leader>h", group = "Git Hunks" },
       { "<leader>l", group = "LSP/Lint" },
       { "<leader>m", group = "Molten/Markup/Format" }, -- Updated group name

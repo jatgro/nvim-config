@@ -32,13 +32,36 @@ return {
           enable_live_preview = true,
           -- Remove filters that might be hiding Catppuccin variants
           ignore = {},
-          light_themes = { 
-            ignore = false, 
-            keywords = { "light", "day", "latte" } 
+          light_themes = {
+            ignore = false,
+            keywords = { "light", "day", "latte" },
           },
-          dark_themes = { 
-            ignore = false, 
-            keywords = { "dark", "night", "black", "mocha", "macchiato", "frappe" } 
+          dark_themes = {
+            ignore = false,
+            keywords = {
+              "dark",
+              "night",
+              "black",
+              "mocha",
+              "macchiato",
+              "frappe",
+              "oasis",
+              "moonlight",
+              "midnight",
+              "abyss",
+              "starlight",
+              "desert",
+              "sol",
+              "scorpion",
+              "canyon",
+              "dune",
+              "cactus",
+              "mirage",
+              "lagoon",
+              "luna",
+              "twilight",
+              "rose",
+            },
           },
           persist = {
             enabled = true,

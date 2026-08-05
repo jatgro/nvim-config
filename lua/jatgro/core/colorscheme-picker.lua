@@ -22,6 +22,23 @@ M.colorschemes = {
   { name = "onedark_vivid", display = "One Dark Vivid" },
   { name = "onedark_dark", display = "One Dark Dark" },
   { name = "cyberdream", display = "Cyberdream" },
+  { name = "oasis", display = "Oasis - Moonlight" },
+  { name = "oasis-night", display = "Oasis - Night" },
+  { name = "oasis-moonlight", display = "Oasis - Moonlight" },
+  { name = "oasis-midnight", display = "Oasis - Midnight" },
+  { name = "oasis-abyss", display = "Oasis - Abyss" },
+  { name = "oasis-starlight", display = "Oasis - Starlight" },
+  { name = "oasis-desert", display = "Oasis - Desert" },
+  { name = "oasis-sol", display = "Oasis - Sol" },
+  { name = "oasis-scorpion", display = "Oasis - Scorpion" },
+  { name = "oasis-canyon", display = "Oasis - Canyon" },
+  { name = "oasis-dune", display = "Oasis - Dune" },
+  { name = "oasis-cactus", display = "Oasis - Cactus" },
+  { name = "oasis-mirage", display = "Oasis - Mirage" },
+  { name = "oasis-lagoon", display = "Oasis - Lagoon" },
+  { name = "oasis-luna", display = "Oasis - Luna" },
+  { name = "oasis-twilight", display = "Oasis - Twilight" },
+  { name = "oasis-rose", display = "Oasis - Rose" },
 }
 
 -- Path to store the current theme
