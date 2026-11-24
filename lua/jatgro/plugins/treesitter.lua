@@ -1,76 +1,33 @@
 return {
   "nvim-treesitter/nvim-treesitter",
-  event = { "BufReadPre", "BufNewFile" },
+  branch = "main",
+  lazy = false,
   build = ":TSUpdate",
   dependencies = {
-    "windwp/nvim-ts-autotag",
+    { "windwp/nvim-ts-autotag", opts = {} },
   },
   config = function()
-    -- import nvim-treesitter plugin
-    local treesitter = require("nvim-treesitter.configs")
-
-    -- enable folding with Treesitter
     vim.opt.foldmethod = "expr"
     vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-    vim.opt.foldenable = false -- disable folding by default
-    vim.opt.foldlevel = 99 -- unfold everything by default
+    vim.opt.foldenable = false
+    vim.opt.foldlevel = 99
 
-    -- configure treesitter
-    treesitter.setup({ -- enable syntax highlighting
-      highlight = {
-        enable = true,
-        -- Disable on large files or invalid windows to prevent errors
-        disable = function(lang, buf)
-          local max_filesize = 100 * 1024 -- 100 KB
-          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-          if ok and stats and stats.size > max_filesize then
-            return true
-          end
-        end,
-        additional_vim_regex_highlighting = false,
-      },
-      -- enable indentation
-      indent = { enable = true },
-      -- enable autotagging (w/ nvim-ts-autotag plugin)
-      autotag = {
-        enable = true,
-      },
-      -- ensure these language parsers are installed
-      ensure_installed = {
-        "json",
-        "javascript",
-        "typescript",
-        "tsx",
-        "yaml",
-        "html",
-        "css",
-        "prisma",
-        "markdown",
-        "markdown_inline",
-        "graphql",
-        "svelte",
-        "bash",
-        "lua",
-        "vim",
-        "dockerfile",
-        "gitignore",
-        "query",
-        "vimdoc",
-        "java",
-        "python",
-        "sql",
-        "xml",
-        "toml",
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = false,
-          node_decremental = "<bs>",
-        },
-      },
+    require("nvim-treesitter").install({
+      "json", "javascript", "typescript", "tsx", "yaml", "html", "css", "prisma",
+      "markdown", "markdown_inline", "graphql", "svelte", "bash", "lua", "vim",
+      "dockerfile", "gitignore", "query", "vimdoc", "java", "python", "sql", "xml", "toml",
+    })
+
+    vim.api.nvim_create_autocmd("FileType", {
+      callback = function(args)
+        local stat = vim.uv.fs_stat(vim.api.nvim_buf_get_name(args.buf))
+        if stat and stat.size > 100 * 1024 then
+          return
+        end
+        if pcall(vim.treesitter.start, args.buf) then
+          vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+      end,
     })
   end,
 }

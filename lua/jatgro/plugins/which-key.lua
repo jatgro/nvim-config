@@ -12,6 +12,7 @@ return {
     
     -- Register key groups
     wk.add({
+      { "<leader>a", group = "AI Bridge" },
       { "<leader>c", group = "Code/Copilot" },
       { "<leader>d", group = "Database/Diagnostics" },
       { "<leader>e", group = "Explorer" },
